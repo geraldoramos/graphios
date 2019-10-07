@@ -29,11 +29,11 @@ interface Config {
   url: string // graphQL endpoint
   query: string // graphQl query
   headers?: object // Optional headers object
-  timeout?: number // Optional custom timeout in ms (default top no timeouit)
+  timeout?: number // Optional custom timeout in ms (default to no timeout)
   retries?: number // Optional retries (default to 3)
   retryDelay?: number // Optional retryDelay in ms (default to 500)
   pagination?: boolean // Optional Auto-pagination (default to false)
-  pageDelay?: number // Otional delay between pagination iterations in ms (default to 200)
+  pageDelay?: number // Optional delay between pagination iterations in ms (default to 200)
 }
 ```
 
