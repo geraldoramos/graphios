@@ -5,7 +5,7 @@ Easy-to-use HTTP client for GraphQL API's (based on *axios*)
 Features:
 
 - Simple API focused on graphQL use case.
-- Auto-pagination (Relay pattern only)
+- Auto-pagination (Relay pattern only. Works with Github API)
 - Configurable retries
 
 ## Installing
@@ -85,7 +85,7 @@ graphios({
 
 ### Performing a paginated query
 
-For pagination support, a `$cursor` variable should be created. API server must follow the relay pagination pattern using nodes and edges. Pagination is not required to be on the first level, but only one pagination field is allowed per request.
+For pagination support, a `$cursor` variable should be included in the query. The API server must follow the relay pagination pattern using nodes and edges. Paginated query is not required to be on the first level, but only one pagination query is allowed per request.
 
 ```js
 import {graphios} = from 'graphios';
