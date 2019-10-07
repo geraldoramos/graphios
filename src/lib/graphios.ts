@@ -34,6 +34,7 @@ export const graphios = async (config: Config): Promise<GraphiosResponse> => {
     }
 
     const startRequests = (cursor?: string): void => {
+
       const data = {
         query: config.query,
         variables: { cursor: cursor || null }
@@ -42,22 +43,25 @@ export const graphios = async (config: Config): Promise<GraphiosResponse> => {
       axios
         .post(config.url, data, { headers: config.headers })
         .then(req => {
+          if(req.data.errors){
+            done(req.data)
+          }
+
           allObjects.push(req.data.data)
-          for (const property in req.data.data) {
-            const hasPageInfo: any = findNested(
-              req.data.data[property],
+          const hasPageInfo: any = findNested(
+              req.data.data,
               'pageInfo'
             )
-            if (hasPageInfo && hasPageInfo.hasNextPage) {
-              setTimeout(() => {
-                startRequests(req.data.data[property].pageInfo.endCursor)
-              }, config.pageDelay || 200)
-              break
-            } else if (hasPageInfo) {
-              done()
-            }
-          }
-        })
+            
+            if (hasPageInfo) {
+              if(hasPageInfo.hasNextPage){
+                setTimeout(() => {
+                  startRequests(hasPageInfo.endCursor)
+                }, config.pageDelay || 200)
+              } else {
+                done()
+              }
+        }})
         .catch(err => {
           done(err)
         })
