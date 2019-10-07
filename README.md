@@ -13,13 +13,13 @@ Features:
 Using npm:
 
 ```bash
-$ npm install axios
+$ npm install graphios
 ```
 
 Using yarn:
 
 ```bash
-$ yarn add axios
+$ yarn add graphios
 ```
 
 ## Configuration object (input)
