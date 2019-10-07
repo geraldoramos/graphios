@@ -118,7 +118,7 @@ graphios({
     url: 'https://mygraphql.xyz/graphql',
     headers,
     retries: 3,
-    retryDelay: 500
+    retryDelay: 500,
     pagination: true,
     pageDelay: 300
   })
