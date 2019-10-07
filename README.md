@@ -72,7 +72,7 @@ graphios({
   })
   .then(function (response) {
     // handle success
-    console.log(response);
+    console.log(response.data);
   })
   .catch(function (error) {
     // handle error
@@ -88,7 +88,7 @@ graphios({
     retries: 3,
     retryDelay: 500
   }
-    console.log(response);
+    console.log(response.data);
 
   } catch (error) {
     console.error(error);
@@ -137,7 +137,7 @@ graphios({
   })
   .then(function (response) {
     // handle success
-    console.log(response);
+    console.log(response.data);
   })
   .catch(function (error) {
     // handle error
@@ -156,7 +156,7 @@ graphios({
     pagination: true,
     pageDelay: 300
   })
-    console.log(response);
+    console.log(response.data);
 
   } catch (error) {
     console.error(error);
