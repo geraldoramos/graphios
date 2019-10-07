@@ -26,13 +26,14 @@ $ yarn add graphios
 
 ```typescript
 interface Config {
-  url: string
-  query: string
-  headers?: object
-  retries?: number
-  retryDelay?: number
-  pagination?: boolean
-  pageDelay?: number
+  url: string // graphQL endpoint
+  query: string // graphQl query
+  headers?: object // Optional headers object
+  timeout?: number // Optional custom timeout in ms (default top no timeouit)
+  retries?: number // Optional retries (default to 3)
+  retryDelay?: number // Optional retryDelay in ms (default to 500)
+  pagination?: boolean // Optional Auto-pagination (default to false)
+  pageDelay?: number // Otional delay between pagination iterations in ms (default to 200)
 }
 ```
 
