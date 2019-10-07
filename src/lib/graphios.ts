@@ -5,6 +5,7 @@ import deepmerge from 'deepmerge'
 import { removeKeys, findNested } from './utils'
 
 export const graphios = async (config: Config): Promise<GraphiosResponse> => {
+  axios.defaults.timeout = config.timeout || 0
   axiosRetry(axios, {
     retries: config.retries || 3,
     retryDelay: retryCount => {

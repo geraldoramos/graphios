@@ -9,6 +9,7 @@ export interface Config {
   readonly url: string;
   readonly query: string;
   readonly headers?: object;
+  readonly timeout?: number;
   readonly retries?: number;
   readonly retryDelay?: number;
   readonly pagination?: boolean;
