@@ -48,7 +48,7 @@ export const graphios = async (config: Config): Promise<GraphiosResponse> => {
               req.data.data[property],
               'pageInfo'
             )
-            if (hasPageInfo.hasNextPage) {
+            if (hasPageInfo && hasPageInfo.hasNextPage) {
               setTimeout(() => {
                 startRequests(req.data.data[property].pageInfo.endCursor)
               }, config.pageDelay || 200)
