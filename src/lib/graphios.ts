@@ -1,6 +1,6 @@
 import axios from 'axios'
 import axiosRetry from 'axios-retry'
-import { Config, GraphiosResponse } from '../types'
+import { Config, GraphiosResponse, Pageinfo } from '../types'
 import deepmerge from 'deepmerge'
 import { removeKeys, findNested } from './utils'
 
@@ -48,11 +48,11 @@ export const graphios = async (config: Config): Promise<GraphiosResponse> => {
           }
 
           allObjects.push(req.data.data)
-          const hasPageInfo: any = findNested(
+          const hasPageInfo: Pageinfo = findNested(
               req.data.data,
               'pageInfo'
             )
-            
+
             if (hasPageInfo) {
               if(hasPageInfo.hasNextPage){
                 setTimeout(() => {
