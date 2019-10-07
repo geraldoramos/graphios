@@ -22,7 +22,7 @@ Using yarn:
 $ yarn add axios
 ```
 
-## Configuration object
+## Configuration object (input)
 
 ```typescript
 interface Config {
@@ -33,6 +33,19 @@ interface Config {
   retryDelay?: number
   pagination?: boolean
   pageDelay?: number
+}
+```
+
+## Response object (output)
+
+Response object has the same format of `axios`, except for auto-paginated requests.
+
+```typescript
+interface GraphiosResponse {
+  data: object
+  status?: number // not presented on auto-paginated requests
+  statusText?: string // not presented on auto-paginated requests
+  headers?: object // not presented on auto-paginated requests
 }
 ```
 
