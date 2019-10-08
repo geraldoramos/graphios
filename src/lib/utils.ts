@@ -1,5 +1,4 @@
 /* eslint-disable */
-import * as _ from 'lodash'
 export const removeKeys = (obj, keys) => {
   let index
   for (let prop in obj) {

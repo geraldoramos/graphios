@@ -1,14 +1,21 @@
 {
   "name": "graphios",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Easy-to-use HTTP client for GraphQL API's",
-  "author": {"name": "Geraldo Ramos"},
+  "author": {
+    "name": "Geraldo Ramos"
+  },
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
   "repository": "https://github.com/geraldoramos/graphios",
   "license": "MIT",
-  "keywords": ["axios", "graphql", "http client", "graphql client"],
+  "keywords": [
+    "axios",
+    "graphql",
+    "http client",
+    "graphql client"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json && tsc -p tsconfig.module.json",
     "test": "eslint ./src --ext .ts,.tsx && yarn build && ava"
@@ -19,14 +26,13 @@
   "dependencies": {
     "axios": "^0.19.0",
     "axios-retry": "^3.1.2",
-    "deepmerge": "^4.0.0",
-    "lodash": "^4.17.15"
+    "deepmerge": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^6.5.1",
     "@typescript-eslint/eslint-plugin": "^2.3.2",
     "@typescript-eslint/parser": "^2.3.2",
     "ava": "2.4.0",
+    "eslint": "^6.5.1",
     "prettier": "^1.18.2",
     "typescript": "^3.5.3"
   },
