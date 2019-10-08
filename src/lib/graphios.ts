@@ -5,7 +5,7 @@ import deepmerge from 'deepmerge'
 import { removeKeys, findNested } from './utils'
 import events from 'events'
 
-export const graphiosEvents = new events.EventEmitter();
+const graphiosEvents = new events.EventEmitter();
 
 export const graphios = async (config: Config): Promise<GraphiosResponse> => {
   axios.defaults.timeout = config.timeout || 0
@@ -76,3 +76,5 @@ export const graphios = async (config: Config): Promise<GraphiosResponse> => {
     startRequests()
   })
 }
+
+export {graphiosEvents}
