@@ -1,1 +1,1 @@
-export {graphios} from './lib/graphios';
+export {graphios, graphiosEvents} from './lib/graphios';
