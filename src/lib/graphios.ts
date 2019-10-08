@@ -3,6 +3,9 @@ import axiosRetry from 'axios-retry'
 import { Config, GraphiosResponse, Pageinfo } from '../types'
 import deepmerge from 'deepmerge'
 import { removeKeys, findNested } from './utils'
+import events from 'events'
+
+export const graphiosEvents = new events.EventEmitter();
 
 export const graphios = async (config: Config): Promise<GraphiosResponse> => {
   axios.defaults.timeout = config.timeout || 0
@@ -24,18 +27,18 @@ export const graphios = async (config: Config): Promise<GraphiosResponse> => {
   // if pagination, iterate over requests until all data is retrieved
   return new Promise((resolve: Function, reject: Function): void => {
     const allObjects = []
-
+    let page = 0
     const done = (err?: object): void => {
       if (err) reject(err)
       const allData = deepmerge.all(allObjects)
       removeKeys(allData, ['pageInfo'])
       resolve({
-        data: allData
+        data: allData, 
+        pagesProcessed: page
       })
     }
 
     const startRequests = (cursor?: string): void => {
-
       const data = {
         query: config.query,
         variables: { cursor: cursor || null }
@@ -43,14 +46,17 @@ export const graphios = async (config: Config): Promise<GraphiosResponse> => {
 
       axios
         .post(config.url, data, { headers: config.headers })
-        .then(req => {
-          if(req.data.errors){
-            done(req.data)
+        .then(response => {
+          page = page + 1
+          graphiosEvents.emit("pagination", { page, response, requestId: config.requestId });
+
+          if(response.data.errors){
+            done(response.data)
           }
 
-          allObjects.push(req.data.data)
+          allObjects.push(response.data.data)
           const hasPageInfo: Pageinfo = findNested(
-              req.data.data,
+            response.data.data,
               'pageInfo'
             )
 

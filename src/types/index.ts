@@ -3,6 +3,7 @@ export interface GraphiosResponse {
   readonly status?: number;
   readonly statusText?: string;
   readonly headers?: object;
+  readonly pagesProcessed?: number;
 }
 
 export interface Config {
@@ -13,6 +14,7 @@ export interface Config {
   readonly retries?: number;
   readonly retryDelay?: number;
   readonly pagination?: boolean;
+  readonly requestId?: string;
   readonly pageDelay? : number;
 }
 

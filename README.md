@@ -33,20 +33,20 @@ interface Config {
   retries?: number // Optional retries (default to 3)
   retryDelay?: number // Optional retryDelay in ms (default to 500)
   pagination?: boolean // Optional Auto-pagination (default to false)
+  requestId?: string // Optional request identifier, useful for monitoring page iterations
   pageDelay?: number // Optional delay between pagination iterations in ms (default to 200)
 }
 ```
 
 ## Response object (output)
 
-Response object has the same format of `axios`, except for auto-paginated requests.
-
 ```typescript
 interface GraphiosResponse {
-  data: object
+  data: object // Response data
   status?: number // not presented on auto-paginated requests
   statusText?: string // not presented on auto-paginated requests
   headers?: object // not presented on auto-paginated requests
+  pagesProcessed?: number // Only available for auto-paginated requests
 }
 ```
 
@@ -102,7 +102,7 @@ graphios({
 For pagination support, a `$cursor` variable should be included in the query. The API server must follow the relay pagination pattern using nodes and edges. Paginated query is not required to be on the first level, but only one pagination query is allowed per request.
 
 ```js
-import {graphios} = from 'graphios';
+import {graphios, graphiosEvents} = from 'graphios'; // import graphiosEvents for pagination events
 
 // A query variable $cursor is required.
 const query = `
@@ -134,6 +134,7 @@ graphios({
     retries: 3,
     retryDelay: 500,
     pagination: true,
+    requestId: 'myUsersRequest'
     pageDelay: 300
   })
   .then(function (response) {
@@ -141,7 +142,7 @@ graphios({
     console.log(response.data);
   })
   .catch(function (error) {
-    // handle error
+    // If any page fails, it will end here
     console.log(error);
   })
 
@@ -155,19 +156,30 @@ graphios({
     retries: 3,
     retryDelay: 500
     pagination: true,
+    requestId: 'myUsersRequest',
     pageDelay: 300
   })
     console.log(response.data);
 
   } catch (error) {
+    // If any page fails, it will end here
     console.error(error);
   }
 })()
+
+// Optional event handler
+graphiosEvents.on('pagination', pageData => {
+  console.log(
+  pageData.page // Page number,
+  pageData.response, // Response object, same as an individual request
+  pageData.requestId // Request identifier set on the request config
+})
+
 ```
 
 ## Credits
 
-Based on: [axios](https://github.com/axios/axios) and [axios-retry](https://github.com/softonic/axios-retry).
+Relies on the excellent work provided by [axios](https://github.com/axios/axios) and [axios-retry](https://github.com/softonic/axios-retry).
 
 ## License
 
