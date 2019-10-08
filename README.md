@@ -5,8 +5,9 @@ Easy-to-use HTTP client for GraphQL API's (based on *axios*)
 Features:
 
 - Simple API focused on graphQL use case.
-- Auto-pagination (Relay pattern only. Works with Github API)
-- Configurable retries
+- Auto-pagination (Relay pattern only, such as Github API)
+- Event listener for paginated requests
+- Configurable retries (and retryDelay)
 
 ## Installing
 
