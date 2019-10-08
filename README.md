@@ -43,9 +43,9 @@ interface Config {
 ```typescript
 interface GraphiosResponse {
   data: object // Response data
-  status?: number // not presented on auto-paginated requests
-  statusText?: string // not presented on auto-paginated requests
-  headers?: object // not presented on auto-paginated requests
+  status?: number // not present on auto-paginated requests
+  statusText?: string // not present on auto-paginated requests
+  headers?: object // not present on auto-paginated requests
   pagesProcessed?: number // Only available for auto-paginated requests
 }
 ```
