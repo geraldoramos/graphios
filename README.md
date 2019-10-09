@@ -89,7 +89,7 @@ graphios({
     url: 'https://mygraphql.xyz/graphql',
     retries: 3,
     retryDelay: 500
-  }
+  })
     console.log(response.data);
 
   } catch (error) {
