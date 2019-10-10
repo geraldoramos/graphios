@@ -95,7 +95,7 @@ graphios({
 
 ### Performing a paginated query
 
-For auto-pagination support, a `$cursor` variable should be included in the query. The API server must follow the relay pagination pattern using nodes and edges. Paginated query is not required to be on the first level, but only one pagination query is allowed per request.
+For auto-pagination support, a `$cursor` variable should be included in the query. The API server must follow the relay pagination pattern using nodes and edges. The paginated query is not required to be on the first level, but only one pagination query is allowed per request.
 
 *Example using an usable query for the Github API*
 
@@ -167,7 +167,7 @@ graphios({
   }
 })()
 
-// Optional event handler
+// Optional pagination event handler
 graphiosEvents.on('pagination', pageData => {
   console.log(
   pageData.page // Page number,
@@ -179,7 +179,7 @@ graphiosEvents.on('pagination', pageData => {
 
 ### Axios custom configuration (optional input)
 
-An optional second object can be passed if any specific configuration from Axios is needed. This will override any configuration made on the graphios config.
+An optional second object can be passed if any specific configuration from Axios is needed. This will override any configuration made on the graphios config (first parameter).
 
 ```typescript
 interface AxiosRequestConfig {
