@@ -70,11 +70,11 @@ graphios({
     query,
     url: 'https://mygraphql.xyz/graphql'
   })
-  .then(function (response) {
+  .then( response => {
     // handle success
     console.log(response.data);
   })
-  .catch(function (error) {
+  .catch( error => {
     // handle error
     console.log(error);
   })
@@ -137,11 +137,11 @@ graphios({
     requestId: 'myRepoReq123'
     pageDelay: 100
   })
-  .then(function (response) {
+  .then( response => {
     // handle success
     console.log(response.data);
   })
-  .catch(function (error) {
+  .catch( error => {
     // If any page fails, it will end here
     console.log(error);
   })
@@ -224,11 +224,11 @@ graphios(
     maxRedirects: 10
   }
 )
-  .then(function(response) {
+  .then( response => {
     // handle success
     console.log(response.data)
   })
-  .catch(function(error) {
+  .catch( error => {
     // If any page fails, it will end here
     console.log(error)
   })
