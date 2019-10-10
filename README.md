@@ -56,7 +56,7 @@ interface GraphiosResponse {
 ### Performing a simple query:
 
 ```js
-import {graphios} = from 'graphios';
+import {graphios} from 'graphios';
 
 const query = `{
   users {
@@ -101,7 +101,7 @@ For auto-pagination support, a `$cursor` variable should be included in the quer
 
 ```js
 // import graphiosEvents for pagination events
-import {graphios, graphiosEvents} = from 'graphios';
+import {graphios, graphiosEvents} from 'graphios';
 
 // A query variable $cursor is required.
 const query = `
