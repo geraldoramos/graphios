@@ -2,7 +2,7 @@
 
 Easy-to-use Axios-based HTTP client for GraphQL API's. This library is more suitable for back-end interactions with GraphQL servers (not frontends/UI's). The Auto-pagination feature allows fetching of large amounts of data from paginated GraphQL API's without the need to write custom code.
 
-Features:
+*Features:*
 
 - Simple API focused on GraphQL use case.
 - Auto-pagination (Relay pattern only, such as Github API)
