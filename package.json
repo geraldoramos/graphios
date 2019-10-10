@@ -1,6 +1,6 @@
 {
   "name": "graphios",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Easy-to-use HTTP client for GraphQL API's",
   "author": {
     "name": "Geraldo Ramos"

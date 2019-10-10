@@ -1,9 +1,12 @@
+import {AxiosRequestConfig} from 'axios'
+
 export interface GraphiosResponse {
   readonly data: object;
   readonly status?: number;
   readonly statusText?: string;
   readonly headers?: object;
   readonly pagesProcessed?: number;
+  readonly config?: AxiosRequestConfig;
 }
 
 export interface Config {

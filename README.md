@@ -1,6 +1,6 @@
 # Graphios
 
-Easy-to-use HTTP client for GraphQL API's (based on *axios*)
+Easy-to-use Axios-based HTTP client for GraphQL API's. This library is more suitable for back-end interactions with GraphQL servers (not frontends/UI's). The Auto-pagination feature allows fetching of large amounts of data from paginated GraphQL API's without the need to write custom code.
 
 Features:
 
@@ -68,9 +68,7 @@ const query = `{
 // using promises
 graphios({
     query,
-    url: 'https://mygraphql.xyz/graphql',
-    retries: 3,
-    retryDelay: 500
+    url: 'https://mygraphql.xyz/graphql'
   })
   .then(function (response) {
     // handle success
@@ -87,11 +85,8 @@ graphios({
     const response = await graphios({
     query,
     url: 'https://mygraphql.xyz/graphql',
-    retries: 3,
-    retryDelay: 500
-  }
+  })
     console.log(response.data);
-
   } catch (error) {
     console.error(error);
   }
@@ -100,28 +95,32 @@ graphios({
 
 ### Performing a paginated query
 
-For pagination support, a `$cursor` variable should be included in the query. The API server must follow the relay pagination pattern using nodes and edges. Paginated query is not required to be on the first level, but only one pagination query is allowed per request.
+For auto-pagination support, a `$cursor` variable should be included in the query. The API server must follow the relay pagination pattern using nodes and edges. Paginated query is not required to be on the first level, but only one pagination query is allowed per request.
+
+*Example using an usable query for the Github API*
 
 ```js
-import {graphios, graphiosEvents} = from 'graphios'; // import graphiosEvents for pagination events
+// import graphiosEvents for pagination events
+import {graphios, graphiosEvents} = from 'graphios';
 
 // A query variable $cursor is required.
 const query = `
-  query Users($cursor: String) {
-    users(first: 500, after: $cursor) {
-      edges {
-        node {
-          firstName
-          email
+  query Repository($cursor:String){
+    organization(login:"microsoft"){
+      membersWithRole(first:100, after:$cursor){
+        edges {
+          node {
+            name
+          }
         }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
       }
     }
   }
-  `
+`
 
 const headers = {
     'authorization': `Bearer 1234567SuperHardKey8910`
@@ -130,13 +129,13 @@ const headers = {
 // using promises
 graphios({
     query,
-    url: 'https://mygraphql.xyz/graphql',
+    url: 'https://api.github.com/graphql',
     headers,
     retries: 3,
     retryDelay: 500,
     pagination: true,
-    requestId: 'myUsersRequest'
-    pageDelay: 300
+    requestId: 'myRepoReq123'
+    pageDelay: 100
   })
   .then(function (response) {
     // handle success
@@ -152,13 +151,13 @@ graphios({
   try {
     const response = await graphios({
     query,
-    url: 'https://mygraphql.xyz/graphql',
+    url: 'https://api.github.com/graphql',
     headers,
     retries: 3,
     retryDelay: 500
     pagination: true,
-    requestId: 'myUsersRequest',
-    pageDelay: 300
+    requestId: 'myRepoReq123',
+    pageDelay: 100
   })
     console.log(response.data);
 
@@ -173,9 +172,66 @@ graphiosEvents.on('pagination', pageData => {
   console.log(
   pageData.page // Page number,
   pageData.response, // Response object, same as an individual request
-  pageData.requestId // Request identifier set on the request config
+  pageData.requestId // Request identifier set on the config: 'myRepoReq123'
 })
 
+```
+
+### Axios custom configuration (optional input)
+
+An optional second object can be passed if any specific configuration from Axios is needed. This will override any configuration made on the graphios config.
+
+```typescript
+interface AxiosRequestConfig {
+  url?: string
+  method?: Method
+  baseURL?: string
+  transformRequest?: AxiosTransformer | AxiosTransformer[]
+  transformResponse?: AxiosTransformer | AxiosTransformer[]
+  headers?: any
+  params?: any
+  paramsSerializer?: (params: any) => string
+  data?: any
+  timeout?: number
+  withCredentials?: boolean
+  adapter?: AxiosAdapter
+  auth?: AxiosBasicCredentials
+  responseType?: ResponseType
+  xsrfCookieName?: string
+  xsrfHeaderName?: string
+  onUploadProgress?: (progressEvent: any) => void
+  onDownloadProgress?: (progressEvent: any) => void
+  maxContentLength?: number
+  validateStatus?: (status: number) => boolean
+  maxRedirects?: number
+  socketPath?: string | null
+  httpAgent?: any
+  httpsAgent?: any
+  proxy?: AxiosProxyConfig | false
+  cancelToken?: CancelToken
+}
+```
+
+*Example:*
+
+```js
+graphios(
+  {
+    query: `{ Users { name } }`,
+    url: 'https://mygraphql.xyz/graphql'
+  },
+  {
+    maxRedirects: 10
+  }
+)
+  .then(function(response) {
+    // handle success
+    console.log(response.data)
+  })
+  .catch(function(error) {
+    // If any page fails, it will end here
+    console.log(error)
+  })
 ```
 
 ## Credits

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {AxiosRequestConfig} from 'axios'
 import axiosRetry from 'axios-retry'
 import { Config, GraphiosResponse, Pageinfo } from '../types'
 import deepmerge from 'deepmerge'
@@ -7,24 +8,36 @@ import events from 'events'
 
 export const graphiosEvents = new events.EventEmitter();
 
-export const graphios = async (config: Config): Promise<GraphiosResponse> => {
+export const graphios = async (config: Config, axiosConfig?: AxiosRequestConfig): Promise<GraphiosResponse> => {
+
   axios.defaults.timeout = config.timeout || 0
+  axios.defaults.headers.common = config.headers
+
   axiosRetry(axios, {
     retries: config.retries || 3,
     retryDelay: retryCount => {
       return retryCount * config.retryDelay || 500
     }
   })
+  
 
   // if no pagination, perform simple request
   if (!config.pagination) {
     const data = {
       query: config.query
     }
-    return axios.post(config.url, data, { headers: config.headers || {} })
+    return axios.post(config.url, data, axiosConfig)
   }
 
-  // if pagination, iterate over requests until all data is retrieved
+  // Check query for pagination info
+  if(!config.query.includes('$cursor')){
+    throw new Error ('A $cursor variable is required in the query when auto-pagination is enabled')
+  }
+  if(!config.query.includes('pageInfo')){
+    throw new Error ('Pagination info (pageInfo) is required in the query when auto-pagination is enabled')
+  }
+
+  // if query is valid, iterate over requests until all data is retrieved
   return new Promise((resolve: Function, reject: Function): void => {
     const allObjects = []
     let page = 0
@@ -45,7 +58,7 @@ export const graphios = async (config: Config): Promise<GraphiosResponse> => {
       }
 
       axios
-        .post(config.url, data, { headers: config.headers })
+        .post(config.url, data, axiosConfig)
         .then(response => {
           page = page + 1
           graphiosEvents.emit("pagination", { page, response, requestId: config.requestId });
