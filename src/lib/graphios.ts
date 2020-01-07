@@ -2,8 +2,8 @@ import axios from 'axios'
 import {AxiosRequestConfig} from 'axios'
 import axiosRetry from 'axios-retry'
 import { Config, GraphiosResponse, Pageinfo } from '../types'
-// import deepmerge from 'deepmerge'
-import { findNested } from './utils'
+import deepmerge from 'deepmerge'
+import { findNested, removeKeys } from './utils'
 import events from 'events'
 
 export const graphiosEvents = new events.EventEmitter();
@@ -43,14 +43,15 @@ export const graphios = async (config: Config, axiosConfig?: AxiosRequestConfig)
     let page = 0
     const done = (err?: object): void => {
       if (err) reject(err)
-      // console.log('merging')
-      // const allData = deepmerge.all(allObjects)
-      // console.log('removing keys')
-      // removeKeys(allData, ['pageInfo'])
-      // console.log('removed Keys')
+
+      let allData;
+      if(!config.noMerge){
+      allData = deepmerge.all(allObjects)
+      removeKeys(allData, ['pageInfo'])
+      }
       
       resolve({
-        data: {}, 
+        data: allData, 
         pagesProcessed: page
       })
     }
