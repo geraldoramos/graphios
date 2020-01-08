@@ -5,6 +5,7 @@ import { Config, GraphiosResponse, Pageinfo } from '../types'
 import deepmerge from 'deepmerge'
 import { findNested, removeKeys } from './utils'
 import events from 'events'
+import CryptoJS from "crypto-js"
 
 export const graphiosEvents = new events.EventEmitter();
 
@@ -36,6 +37,55 @@ export const graphios = async (config: Config, axiosConfig?: AxiosRequestConfig)
   if(!config.query.includes('pageInfo')){
     throw new Error ('Pagination info (pageInfo) is required in the query when auto-pagination is enabled')
   }
+
+  // if parallel is true
+  const requestFunction = (dataPage,page ): Promise<object> => {
+    return new Promise((resolve, reject): void => {
+        axios.post(config.url, dataPage, axiosConfig).then( response =>{
+          graphiosEvents.emit("pagination", { page, response, requestId: config.requestId });
+          resolve()
+        }).catch(err=>{
+          reject(err)
+        })
+    })
+  }
+  if(config.parallel){
+    const data = {
+      query: config.query,
+      variables: { cursor: null }
+    }
+    console.log('oi')
+    const firstRequest = await axios.post(config.url, data, axiosConfig)
+    console.log(firstRequest)
+    const pages = Math.ceil(firstRequest.data.data.courseProgress.totalCount / 10000)
+  
+
+    return new Promise((resolve: Function, reject: Function): void => {
+
+    const requests = []
+    for (let page = 1; page < pages; page++) {
+      const rawStr = page.toString()
+      const wordArray = CryptoJS.enc.Utf8.parse(rawStr);
+      const dataPage = {
+        query: config.query,
+        variables: { cursor: CryptoJS.enc.Base64.stringify(wordArray) }
+      }
+      requests.push(requestFunction(dataPage, page))
+    }
+
+    Promise.all(requests).then((data) =>{
+      console.log(data)
+      resolve()
+    }).catch(err=>{
+      reject(err)
+    })
+
+  })
+}
+
+
+
+
 
   // if query is valid, iterate over requests until all data is retrieved
   return new Promise((resolve: Function, reject: Function): void => {

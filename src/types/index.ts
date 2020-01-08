@@ -20,6 +20,7 @@ export interface Config {
   readonly requestId?: string;
   readonly pageDelay? : number;
   readonly noMerge? : boolean;
+  readonly parallel? : boolean;
 }
 
 export interface Pageinfo {
